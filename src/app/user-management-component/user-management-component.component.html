@@ -1,0 +1,94 @@
+<div id="userList">
+
+  <div id="addUser" *ngIf="addUserEnabled">
+    <form #form="ngForm" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label for="firstName" class="col-sm-2 form-control-label">First Name:</label>
+        <div class="col-6">
+          <input type="text" id="firstName" name="firstName" [(ngModel)]="user.firstName" required class="form-control" #userControl="ngModel">
+          <div *ngIf="userControl.invalid && (userControl.dirty || userControl.touched)"
+              class="alert alert-danger">
+              <div *ngIf="userControl.errors.required">
+                  Name is required.
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="lastName" class="col-sm-2 form-control-label">Last Name:</label>
+        <div class="col-6">
+          <input type="text" id="lastName" name="lastName" [(ngModel)]="user.lastName" required class="form-control"  #userControll="ngModel">
+          <div *ngIf="userControll.invalid && (userControll.dirty || userControll.touched)"
+              class="alert alert-danger">
+              <div *ngIf="userControll.errors.required">
+                  Last Name is required.
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="employeeId" class="col-sm-2 form-control-label">Employee id:</label>
+         <div class="col-3">
+          <input type="text" id="employeeId" name="employeeId" [(ngModel)]="user.employeeId" required class="form-control"  #userControle="ngModel">
+          <div *ngIf="userControle.invalid && (userControle.dirty || userControle.touched)"
+              class="alert alert-danger">
+              <div *ngIf="userControle.errors.required">
+                  Employee id is required.
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row" *ngIf="errorMessage" >
+
+        <div class="col alert alert-danger">
+          <p>{{errorMessage}}</p>
+        </div>
+      </div>
+      <div class="form-group row" >
+        <div class="col-4"></div>
+        <input type="submit" class="col-2 btn btn-light  btn-outline-dark" [disabled]="!form.valid" value="{{saveButton}}">
+        <div class="col-2 btn btn-light content-padding  btn-outline-dark" (click)="onReset()">Reset</div>
+      </div>
+    </form>
+  </div>
+  <div id="viewTemplate" *ngIf="addUserEnabled">
+    <form #form="ngForm" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <div class="col-3">
+          <input [(ngModel)]="searchUser.searchString" placeholder="Search..." type="text" id="searchString" name="searchString" (keyup.enter)="filterUsers()"
+            (blur)="filterUsers()" class="form-control">
+        </div>
+        <div class="col-7">
+            Sort:
+            <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('firstName')">First Name</div>
+            <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('lastName')">Last Name</div>
+            <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('employeeId')">Id</div>
+        </div>
+      </div>
+    </form>
+    <div id="template" *ngFor="let user of users">
+      <div class="row">
+        <div class="col-6 style4">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 btn  btn-light btn-disabled top-buffer">
+          {{user.firstName}}
+        </div>
+          <button class="col-1 btn btn-light content-padding  top-buffer btn-outline-dark" (click)="onUpdate(user)">Edit</button>
+      </div>
+      <div class="row">
+        <div class="col-6  btn btn-light top-buffer">
+          {{user.lastName}}
+        </div>
+        <button class="col-1 btn btn-light content-padding  top-buffer btn-outline-dark" (click)="onClick(user)">Delete</button>
+      </div>
+      <div class="row">
+        <div class="col-6  btn btn-light top-buffer">
+          {{user.employeeId}}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

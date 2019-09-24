@@ -1,0 +1,183 @@
+<div id="taskList">
+    <div id="addTask" >
+      <form #form="ngForm" (ngSubmit)="onSubmit()">
+          <div class="form-group row">
+              <label for="projectId" class="col-sm-2 form-control-label">Project:</label>
+              <div class="col-4">
+                <input type="text" id="projectId" name="projectId" [(ngModel)]="task.projectId" class="form-control" required #taskControlp="ngModel">
+                <div *ngIf="taskControlp.invalid && (taskControlp.dirty || taskControlp.touched)"
+                class="alert alert-danger">
+                <div *ngIf="taskControlp.errors.required">
+                    Project is required.
+                </div>
+            </div>
+              </div>
+              <ng-template #content2 let-modal>
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Search Project</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <form #form="ngForm">
+                          <div class="form-group row">
+    
+                            <div class="col-4">
+                              <input [(ngModel)]="searchProject" placeholder="Search..." type="text" id="searchString" name="searchString" (keyup.enter)="filterProjects()"
+                                (blur)="filterProjects()" class="form-control">
+                            </div>
+                          </div>
+                        </form>
+                        <div id="templateProject" *ngFor="let project of projects">
+                          <div class="row">
+                            <div class="col-4 btn btn-light btn-disabled top-buffer">
+                              {{project.project}}
+                            </div>
+    
+                            <button class="btn col-3 btn-outline-dark  top-buffer" (click)="assignProject(project);modal.dismiss('Cross click')">select</button>
+                          </div>
+                        </div>
+                      </div>
+                </ng-template>
+    
+                <div class="btn col-1 btn-outline-dark" (click)="open(content2)">Search</div>
+        </div>
+        <div class="form-group row">
+          <label for="task" class="col-sm-2 form-control-label">Task:</label>
+          <div class="col-6">
+            <input type="text" id="task" name="task" [(ngModel)]="task.task" required class="form-control" #taskControl="ngModel">
+            <div *ngIf="taskControl.invalid && (taskControl.dirty || taskControl.touched)"
+                class="alert alert-danger">
+                <div *ngIf="taskControl.errors.required">
+                    Task is required.
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="priority" class="col-sm-2 form-control-label">Priority:</label>
+          <div class="col-6">
+            <ng5-slider [value]="10" [(ngModel)]="task.priority" [options]="options" name="priority" class="form-control">
+            </ng5-slider>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="parentTask" class="col-sm-2 form-control-label">Parent Task:</label>
+          <div class="col-4">
+            <input type="text" id="parentTask" name="parentTask" [(ngModel)]="task.parentTask" class="form-control">
+          </div>
+          <ng-template #content1 let-modal>
+              <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Search Task</h4>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <form #form="ngForm">
+                      <div class="form-group row">
+
+                        <div class="col-4">
+                          <input [(ngModel)]="searchParentTask" placeholder="Search..." type="text" id="searchString" name="searchString" (keyup.enter)="filterParentTasks()"
+                            (blur)="filterParentTasks()" class="form-control">
+                        </div>
+                      </div>
+                    </form>
+                    <div id="templateUser" *ngFor="let task of parentTasks">
+                      <div class="row">
+                        <div class="col-4 btn btn-light btn-disabled top-buffer">
+                          {{task.task}}
+                        </div>
+
+                        <button class="btn col-3 btn-outline-dark  top-buffer" (click)="assignParentTask(task);modal.dismiss('Cross click')">select</button>
+                      </div>
+                    </div>
+                  </div>
+            </ng-template>
+
+            <div class="btn col-1 btn-outline-dark" (click)="open(content1)">Search</div>
+        </div>
+        <div class="form-group row">
+          <label for="startDate" class="col-sm-2 form-control-label">Start Date:</label>
+          <div class="col-6">
+            <input type="datetime-local" id="startDate" name="startDate" [(ngModel)]="task.startDate" class="form-control">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="endDate" class="col-sm-2 form-control-label">End Date:</label>
+          <div class="col-6">
+              <input type="datetime-local" id="endDate" name="endtDate" [(ngModel)]="task.endDate" class="form-control">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="userId" class="col-sm-2 form-control-label">User:</label>
+            <div class="col-4">
+                <input type="text" id="userId" name="userId" [(ngModel)]="task.userId" class="form-control">
+              </div>
+              <ng-template #content let-modal>
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Search User</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <form #form="ngForm">
+                          <div class="form-group row">
+
+                            <div class="col-4">
+                              <input [(ngModel)]="searchUser.searchString" placeholder="Search..." type="text" id="searchString" name="searchString" (keyup.enter)="filterUsers()"
+                                (blur)="filterUsers()" class="form-control">
+                            </div>
+                          </div>
+                        </form>
+                        <div id="templateUser" *ngFor="let user of users">
+                          <div class="row">
+                            <div class="col-3 btn btn-light btn-disabled top-buffer">
+                              {{user.firstName}}
+                            </div>
+
+                            <div class="col-3  btn btn-light top-buffer">
+                              {{user.lastName}}
+                            </div>
+
+                            <div class="col-2  btn btn-light top-buffer">
+                              {{user.employeeId}}
+                            </div>
+                            <button class="btn col-3 btn-outline-dark  top-buffer" (click)="assignUser(user);modal.dismiss('Cross click')">select</button>
+                          </div>
+                        </div>
+                      </div>
+
+                </ng-template>
+
+                <div class="btn col-1 btn-outline-dark" (click)="open(content)">Search</div>
+          </div>
+
+        <div class="form-group row" *ngIf="errorMessage" >
+
+          <div class="col alert alert-danger">
+            <p>{{errorMessage}}</p>
+          </div>
+        </div>
+        <div class="form-group row" >
+            <div class="col-4"></div>
+            <input type="submit" class="col-2 btn btn-light  btn-outline-dark" [disabled]="!form.valid" value="{{saveButton}}">
+            <div class="col-2 btn btn-light content-padding  btn-outline-dark" (click)="onReset()">Reset</div>
+        </div>
+
+
+      </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"></script>
+  </div>

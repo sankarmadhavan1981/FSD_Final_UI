@@ -1,0 +1,106 @@
+<div id="taskList">
+
+
+
+  <div id="viewTemplate" *ngIf="!addTaskEnabled">
+    <form #form="ngForm" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label for="projectId" class="col-sm-1 form-control-label">Project:</label>
+        <div class="col-3">
+          <input type="text" id="projectId" name="projectId" [(ngModel)]="searchProject" class="form-control">
+        </div>
+        <ng-template #content2 let-modal>
+            <div class="modal-header">
+              <h4 class="modal-title" id="modal-basic-title">Search Project</h4>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form #form="ngForm">
+                    <div class="form-group row">
+
+                      <div class="col-4">
+                        <input [(ngModel)]="searchProject" placeholder="Search..." type="text" id="searchString" name="searchString" (keyup.enter)="filterProjects()"
+                          (blur)="filterProjects()" class="form-control">
+                      </div>
+                    </div>
+                  </form>
+                  <div id="templateProject" *ngFor="let project of projects">
+                    <div class="row">
+                      <div class="col-4 btn btn-light btn-disabled top-buffer">
+                        {{project.project}}
+                      </div>
+
+                      <button class="btn col-3 btn-outline-dark  top-buffer" (click)="assignProject(project);modal.dismiss('Cross click')">select</button>
+                    </div>
+                  </div>
+                </div>
+          </ng-template>
+
+          <div class="btn col-1 btn-outline-dark" (click)="open(content2)">Search</div>
+          <div class="col-7">
+            Sort:
+            <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('startDate')">Start Date</div>
+            <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('endDate')">End Date</div>
+            <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('priority')">Priority</div>
+            <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('completed')">Completed</div>
+        </div>
+  </div>
+    </form>
+    <div id="template" *ngFor="let task of tasks">
+      <div class="row">
+        <div class="col-sm-2 content-header">
+          Task
+        </div>
+        <div class="col-sm-2 content-header">
+          Parent Task
+        </div>
+        <div class="col-sm-1 content-header">
+          Priority
+        </div>
+
+        <div class="col-sm-2 content-header">
+          Start Date
+        </div>
+        <div class="col-sm-2 content-header">
+          End Date
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2 btn btn-light content-padding">
+          {{task.task}}
+        </div>
+        <div class="col-sm-2 btn btn-light">
+          {{task.parentTask}}
+        </div>
+        <div class="col-sm-1">
+          {{task.priority}}
+        </div>
+        <div class="col-sm-2">
+          {{task.startDate|date:'d/M/yyyy'}}
+        </div>
+
+        <div class="col-sm-2">
+          {{task.endDate|date:'d/M/yyyy'}}
+        </div>
+
+
+        <a class="col-sm-1 btn btn-light btn-outline-dark  content-padding" routerLink="/add-task/{{task.task}}" routerLinkActive="active">Edit</a>
+
+
+        <button type="button" class="col-sm-1 btn btn-light btn-outline-dark  content-padding" (click)="onClick(task)">End Task</button>
+
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</div>

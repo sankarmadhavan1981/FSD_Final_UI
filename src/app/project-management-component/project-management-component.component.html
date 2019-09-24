@@ -1,0 +1,150 @@
+<div id="projectList">
+
+    <div id="addProject" *ngIf="addProjectEnabled">
+      <form #form="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+          <label for="project" class="col-sm-2 form-control-label">Project:</label>
+          <div class="col-6">
+            <input type="text" id="project" name="project" [(ngModel)]="project.project" required class="form-control" #projectControl="ngModel">
+            <div *ngIf="projectControl.invalid && (projectControl.dirty || projectControl.touched)"
+                class="alert alert-danger">
+                <div *ngIf="projectControl.errors.required">
+                    Name is required.
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+        <!--    <div class=col-2></div>-->
+                <label class="col-sm-2 form-control-label" for="dateFlag">Set start and end date</label>
+                <div>
+                    <input type="checkbox" class="form-check-input" id="dateFlag" (click)="setDate()"/>
+                </div>
+                <div class="col-md-3">
+                    <input type="datetime-local" id="startDate" name="startDate" [(ngModel)]="project.startDate" class="form-control">
+                  </div>
+
+                  <div class="col-md-3">
+                      <input type="datetime-local" id="endDate" name="endDate" [(ngModel)]="project.endDate" class="form-control">
+                  </div>
+        </div>
+        <div class="form-group row">
+            <label for="priority" class="col-sm-2 form-control-label">Priority:</label>
+            <div class="col-6">
+              <ng5-slider [value]="10" [(ngModel)]="project.priority" [options]="options" name="priority" class="form-control">
+              </ng5-slider>
+            </div>
+          </div>
+          <div class="form-group row">
+              <label for="userId" class="col-sm-2 form-control-label">Manager:</label>
+              <div class="col-4">
+                  <input type="text" id="userId" name="userId" [(ngModel)]="project.mgrId" class="form-control">
+                </div>
+                <ng-template #content let-modal>
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="modal-basic-title">Search User</h4>
+                      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <form #form="ngForm">
+                            <div class="form-group row">
+  
+                              <div class="col-4">
+                                <input [(ngModel)]="searchUser.searchString" placeholder="Search..." type="text" id="searchString" name="searchString" (keyup.enter)="filterUsers()"
+                                  (blur)="filterUsers()" class="form-control">
+                              </div>
+                            </div>
+                          </form>
+                          <div id="templateUser" *ngFor="let user of users">
+                            <div class="row">
+                              <div class="col-3 btn btn-light btn-disabled top-buffer">
+                                {{user.firstName}}
+                              </div>
+  
+                              <div class="col-3  btn btn-light top-buffer">
+                                {{user.lastName}}
+                              </div>
+  
+                              <div class="col-2  btn btn-light top-buffer">
+                                {{user.employeeId}}
+                              </div>
+                              <button class="btn col-3 btn-outline-dark  top-buffer" (click)="assignUser(user);modal.dismiss('Cross click')">select</button>
+                            </div>
+                          </div>
+                        </div>
+  
+                  </ng-template>
+  
+                  <div class="btn col-md-1 btn-outline-dark" (click)="open(content)">Search</div>
+            </div>
+        <div class="form-group row" *ngIf="errorMessage" >
+
+          <div class="col alert alert-danger">
+            <p>{{errorMessage}}</p>
+          </div>
+        </div>
+        <div class="form-group row" >
+          <div class="col-4"></div>
+          <input type="submit" class="col-2 btn btn-light  btn-outline-dark" [disabled]="!form.valid" value="{{saveButton}}">
+          <div class="col-2 btn btn-light content-padding  btn-outline-dark" (click)="onReset()">Reset</div>
+        </div>
+      </form>
+    </div>
+    <div id="viewTemplate" *ngIf="addProjectEnabled">
+      <form #form="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+          <div class="col-6">
+            <input [(ngModel)]="searchProject" placeholder="Search..." type="text" id="searchString" name="searchString" (keyup.enter)="filterProjects()"
+              (blur)="filterProjects()" class="form-control">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col">
+              Sort:
+              <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('startDate')">Start Date</div>
+              <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('endDate')">End Date</div>
+              <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('priority')">Priority</div>
+              <div class="btn btn-light content-padding  btn-outline-dark" (click)="onSort('priority')">Completed</div>
+          </div>
+        </div>
+      </form>
+      <div id="template" *ngFor="let project of projects">
+        <div class="row">
+          <div class="col-6 style4">
+          </div>
+        </div>
+        <div class="row">
+          
+              <div class="col-5 btn content-padding  btn-light btn-disabled text-left content-padding">
+                  Project: {{project.project}}
+                </div>
+                <div class="col-1 btn content-padding  btn-light content-padding"> Priority</div>
+          <button class="col-md-2 btn btn-light content-padding  btn-outline-dark" (click)="onUpdate(project)">Update</button>  
+        </div>
+        <div class="row">
+          
+              <div class="btn btn-light col-5 text-left  content-padding ">
+                  No of Tasks: {{project.countOfTasks}}
+          
+                  Completed: {{project.countOfCompletedTasks}}          
+          </div>
+          <div class="col-1 btn content-padding  btn-light content-padding"> {{project.priority}}</div>
+          <button class="col-md-2 btn btn-light content-padding  top-buffer btn-outline-dark" (click)="onClick(project)">Suspend</button>
+        </div>
+        <div class="row">
+          
+            <div class="btn btn-light col-5 text-left  content-padding ">
+                Start Date: {{project.startDate | date:'M/d/yy'}}
+        
+                End Date: {{project.endDate | date:'M/d/yy'}}          
+        </div>
+        <div class="col-1 btn content-padding  btn-light content-padding"></div>
+        
+      </div>
+
+
+      </div>
+    </div>
+  </div>
